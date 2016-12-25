@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - My Django Application</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
+    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand">MyShop</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'categories' %}">Categories</a></li>
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <li><a href="#" id="cart"><i class="fa fa-shopping-cart"></i> Cart <span class="badge"></span></a></li>
+                </ul> 
+                {% include 'app/loginpartial.html' %}
+            </div>
+
+        </div>
+    </div>
+
+<div class="container body-content">
+    <div class="row">
+        <div id="shopping-cart" class="shopping-cart" style="display: none;">
+        <div class="shopping-cart-header">
+          <i class="fa fa-shopping-cart cart-icon"></i><span class="badge"></span>
+          <div class="shopping-cart-total">
+            <span class="lighter-text">Total:</span>
+            <span class="main-color-text"></span>
+          </div>
+        </div> <!--end shopping-cart-header -->
+
+        <ul class="shopping-cart-items col-md-12">
+
+        </ul>
+
+        <a id="Checkout_Btn" href="#" class="button">Checkout</a>
+      </div> <!--end shopping-cart -->
+        <div class="col-md-6 col-lg-12">
+            {% block content %}{% endblock %}
+        </div>
+        </div>
+    <hr/>
+    <footer>
+        <p>&copy; {{ year }} - My Django Application</p>
+    </footer>
+</div>
+
+    <script src="{% static 'app/scripts/jquery-1.10.2.js' %}"></script>
+    <script src="{% static 'app/scripts/bootstrap.js' %}"></script>
+    <script src="{% static 'app/scripts/respond.js' %}"></script>
+    <script src="{% static 'app/scripts/jquery.cookie.js' %}"></script>
+{% block scripts %}{% endblock %}
+<script>
+    (function () {
+
+        $("#cart")
+            .on("click",
+                function() {
+                    $("#shopping-cart").fadeToggle("fast");
+                });
+        $("#Checkout_Btn")
+            .on("click",
+                function() {
+                    var arr1 = $.cookie('item');
+                    $.post("/order/",
+                        arr1,
+                        function(data, status) {
+                            alert("Data: " + data + "\nStatus: " + status);
+                        });
+                });
+    })();
+
+    
+</script>
+<script>
+    var item_name = "";
+    var item_price = 0;
+    var item_id = 0;
+    var arr1 = $.cookie('item');
+    if (!arr1) {
+        arr1 = '[]';
+    }
+    var json1 = $.parseJSON(arr1);
+    var sum = 0;
+
+    $.each(json1,
+            function (i, v) {
+                sum = sum + parseInt(v['item_price']);
+                item_name = v['item_name'];
+                item_price = parseInt(v['item_price']);
+                item_id = parseInt(v['item_id']);
+                $('ul.shopping-cart-items')
+                   .append("<li  id=" + i + " class='clearfix col-md-6'><img src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTg5ODgwYjZmNCB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1ODk4ODBiNmY0Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNCIgeT0iMzYuNSI+NjR4NjQ8L3RleHQ+PC9nPjwvZz48L3N2Zz4=' alt='item1'/><span class='item-name'>" + item_name + "</span><span class='item-price'>" + item_price + "$</span><span class='item-quantity'>Quantity:1</span><a href='#'><i data=" + item_id + " id=" + i + " style='font-size: 20px' class='delete_item_in_cart fa fa-trash-o'></i></a></li>");
+            });
+    $('.shopping-cart-total .main-color-text').text(sum);
+
+    $('#cart .badge').text(json1.length);
+    $(".shopping-cart-header .badge").text(json1.length);
+
+    $(function () {
+
+        $("a.buy").click(function () {
+
+            var arr2 = $.cookie('item');
+            if (!arr2) {
+                arr2 = '[]';
+            }
+            var sum2 = 0;
+            var json2 = $.parseJSON(arr2);
+            json2.push({
+                'item_name': $('h2').text(),
+                'item_price': $('p.price').text(),
+                'item_id': $('a.buy').attr('data')
+                 
+            });
+            $.cookie('item', JSON.stringify(json2), { path: '/' });
+            $('ul.shopping-cart-items').empty();
+
+            $.each(json2,
+                function (i, v) {
+                    sum2 = sum2 + parseInt(v['item_price']);
+                    item_name = v['item_name'];
+                    item_price = parseInt(v['item_price']);
+                    item_id = parseInt(v['item_id']);
+                    $('ul.shopping-cart-items')
+                        .append("<li class='clearfix col-md-6'><img src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTg5ODgwYjZmNCB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1ODk4ODBiNmY0Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNCIgeT0iMzYuNSI+NjR4NjQ8L3RleHQ+PC9nPjwvZz48L3N2Zz4=' alt='item1'/><span class='item-name'>" + item_name + "</span><span class='item-price'>" + item_price + "$</span><span class='item-quantity'>Quantity:1</span><a href='#'><i data=" + item_id + " id=" + i + " style='font-size: 20px' class='delete_item_in_cart fa fa-trash-o'></i></a></li>");
+                });
+            $('.shopping-cart-total .main-color-text').text(sum2);
+            $('#cart .badge').text(json2.length);
+            $(".shopping-cart-header .badge").text(json2.length);
+
+            
+        });
+        $('i.delete_item_in_cart').click(function () {
+            var arr3 = $.cookie('item');
+            if (!arr3) {
+                arr3 = '[]';
+            }
+            var json3 = $.parseJSON(arr3);
+            var parent = $(this).parent().parent();
+            var obj = parseInt($(this)[0].id);
+            var sum2 = $('.shopping-cart-total .main-color-text').text();
+            $.each(json3,
+                function (index, v) {
+                    if (index === obj) {
+                        sum2 = sum2 - parseInt(v['item_price']);
+                        json3.splice(index, 1);
+                    }
+                });
+            $.cookie('item', JSON.stringify(json3), { path: '/' });
+            $('.shopping-cart-total .main-color-text').text(sum2);
+            $('#cart .badge').text(json3.length);
+            $(".shopping-cart-header .badge").text(json3.length);
+            parent.remove();
+        });
+    });
+
+
+</script>
+</body>
+</html>

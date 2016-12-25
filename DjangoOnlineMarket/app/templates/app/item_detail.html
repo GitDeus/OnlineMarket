@@ -1,0 +1,63 @@
+﻿{% extends "app/layout.html" %}
+
+{% block content %}
+
+<div class="col-md-12 col-lg-12">
+    <div class="row">
+        <div class="item col-md-8 col-lg-8">
+            <h2>{{item.item_name}}</h2>
+            <a data="{{item.id}}" href="#" class="buy">
+                <i class="fa fa-shopping-cart cart-icon">Buy</i>
+            </a>
+            <p class="price">{{item.item_price}}</p>
+
+        </div>
+        <div class="item col-md-4 col-lg-4">
+            <div class="detail-dwp" name="delivery_div" data-detail-dwp="Товар недоступен"> <div id="delivery_details_info0"></div> <article class="detail-dwp-i"> <header class="clearfix"> <h3 class="float-lt detail-dwp-title"> Доставка  <a href="#" class="info" name="delivery_info"> <img class="sprite info-icon" src="http://i.rozetka.ua/design/_.gif" width="14" height="15" alt="Подробнее"> </a>  </h3> <div class="float-rt detail-dwp-delivery-city"> <a class="novisited sprite-side detail-dwp-delivery-link" name="delivery_city" href="#" onclick="document.fireEvent('clickToPopupCity', {extend_event: [{name:'userCityId', value: 31}, {name:'eventLocation', value:'ProductPage'}]});"> <span class="xhr">Харьков</span> </a> </div> </header>     <section class="detail-dwp-subi">  <h4 class="detail-dwp-subi-title">Самовывоз</h4>   <ul class="detail-dwp-l">  <li class="clearfix detail-dwp-l-i">  <div class="detail-dwp-l-i-title">  −&nbsp;<a class="xhr detail-dwp-l-link" href="#" name="service" service_id="5">из Новой Почты</a>  </div>   <div class="detail-dwp-l-i-field"> 35&nbsp;грн  </div>  </li>  <li class="clearfix detail-dwp-l-i">  <div class="detail-dwp-l-i-title">  −&nbsp;<a class="xhr detail-dwp-l-link" href="#" name="service" service_id="3">из точки выдачи</a>  </div>   <div class="detail-dwp-l-i-field"> 35&nbsp;грн  </div>  </li>  </ul> </section>  <section class="detail-dwp-subi">  <h4 class="detail-dwp-subi-title">Курьер</h4>   <p></p>Мы доставим этот товар курьером службы доставки<p></p>  <ul class="detail-dwp-l">  <li class="clearfix detail-dwp-l-i">  <div class="detail-dwp-l-i-title">  Мист Экспресс </div>   <div class="detail-dwp-l-i-field"> 35&nbsp;грн  </div>  </li>  </ul> </section>   </article>  <article class="detail-dwp-i"> <h3 class="detail-dwp-title"> Оплата  <a href="#" name="payment_info" class="info"> <img class="sprite info-icon" src="http://i.rozetka.ua/design/_.gif" width="14" height="15" alt="Подробнее"> </a>  </h3> <p class="detail-dwp-note">Наличными, Безналичными, Кредит, Visa/MasterCard, Мгновенная рассрочка</p> </article>  <article class="detail-dwp-i">
+                <h3 class="detail-dwp-title"> Гарантия  <a href="#" name="guarantee_info" class="info"> <img class="sprite info-icon" src="http://i.rozetka.ua/design/_.gif" width="14" height="15" alt="Подробнее"> </a>  </h3> <p class="detail-dwp-note">36 месяцев&nbsp;</p> <p class="detail-dwp-note">
+                    обмен/возврат товара в&nbsp;течение 14&nbsp;дней<span id="copyinfo">
+            <br>
+            
+        </span>
+                </p>
+            </article>  </div>
+        </div>
+    </div>
+    <div class="row">
+        {%for comment in comments%}
+        <div class="comment col-md-offset-8 col-lg-offset-8">
+            <div class="comment-header clearfix">
+                
+                    <span class="author-name" itemprop="author">
+                        {{comment.peson_name}}
+                    </span>
+                    <time style="float: right;">
+                        {{comment.comment_date}}
+                    </time>
+            </div>
+            <div class="comment-body" role="alert" style="word-break: break-all;">
+                <p>{{comment.content}}</p>
+                <p class="control-label">Dignity</p>
+                <p>{{comment.dignity}}</p>
+                <p class="control-label">Limitations</p>
+                <p>{{comment.limitations}}</p>
+            </div>
+
+        </div>
+
+
+        {%endfor%}
+        
+        <div class="comment col-md-offset-8 col-lg-offset-8">
+            <form role="form" method="post" class="form-horizontal">{% csrf_token %}   
+                {{ form.as_p }}
+                <button type="submit" class="save btn btn-default">Add Comment</button>
+            </form>
+        </div>
+                    
+    </div>    
+</div>
+
+
+
+{% endblock %}

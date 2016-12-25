@@ -1,0 +1,73 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2>{{ title }}</h2>
+<div class="row">
+    <div class="col-md-8">
+        <section>
+            <h1>User registration</h1>
+            <form role="form" method="post" class="form-horizontal">
+                {% csrf_token %}
+                <hr/>
+                <div class="form-group">
+                    <label for="id_username" class="col-md-2 control-label">Username</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="id_username" type="text" name="username">
+                
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_email" class="col-md-2 control-label">Email</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="id_email" type="email" name="email">
+                      
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_password1" class="col-md-2 control-label">Password</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="id_password1" type="password" name="password1">
+                     
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_password2" class="col-md-2 control-label">Password confirmation</label>
+                    <div class="col-md-10">
+                        <input class="form-control" id="id_password2" type="password" name="password2">
+                     
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Registration" class="btn btn-default"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                {% if form.errors %}
+                    <p class="validation-summary-errors">Please enter a correct data.</p>
+                <ol>
+                {% for error in form.errors %}
+                    <li class="validation-summary-errors"><strong>{{ error }}</str ong></li>
+                {% endfor %}
+                </ol>
+                {% endif %}
+                </div>
+            </form>
+        </section>
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+{% load staticfiles %}
+<script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
+
+{% endblock %}
+
+                
+                        

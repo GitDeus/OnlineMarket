@@ -1,0 +1,9 @@
+﻿{% extends "app/layout.html" %}
+
+
+{% block content %}
+<h2>Categories</h2>
+    {% for category in all_categories %}
+        <p style="padding: 12px 7px 7px 12px; background-color: rgba(173,156,222, 0.1);"><a href="/categories/category/{{category.id}}">{{category.category_name}}</a></p>
+    {% endfor %}
+{% endblock %}
